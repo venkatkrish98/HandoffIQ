@@ -1,7 +1,7 @@
 # Judge testing guide
 
 ## Install
-Use the install link provided in the Devpost submission (production distribution link), or deploy from source as described in the README. Install on a site that has **Jira and Confluence** (a free site works). The installer needs the scopes listed in `manifest.yml`.
+Use the install link in [INSTALL-LINK.txt](INSTALL-LINK.txt) (also in the Devpost submission; production distribution link), or deploy from source as described in the README. Install on a site that has **Jira and Confluence** (a free site works). The installer needs the scopes listed in `manifest.yml`.
 
 ## 2-minute path (no site data needed)
 1. Open **Jira → Apps → HandoffIQ**.

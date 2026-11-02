@@ -10,13 +10,14 @@ Use the install link provided in the Devpost submission (production distribution
 4. **Actions → Propose …** then **Review & approve**: shows exactly what would be created.
 
 ## Full path (real Jira/Confluence)
-1. Create a Jira project (e.g. key `ONB`) and a Confluence space if the site has none.
-2. In the app: **New handover → Create** will list your projects and pages; or seed content first through your own pages mirroring `src/lib/demo-data.js`.
+1. Create a Jira project (e.g. key `ONB`). A Confluence space is optional.
+2. In the app: **New handover**, then on the Sources step choose **Create sample content**. It creates clearly labelled `[Demo]` Jira issues (and Confluence pages if you pick a space) after you approve, then selects them as sources. Or select your own project and pages.
 3. Select the project and pages → **Create and analyze**. Sources are retrieved as *you*; inaccessible pages are reported, never silently skipped.
 4. **Actions → Propose → Review & approve**, pick the target project and space, tick the confirmation, **Approve & create**. The result shows real issue keys and the Confluence page link.
 5. **Audit trail** records each action and result. Mark the handover approved on **Overview** and watch the readiness change.
 
 ## Rovo agent
+*Not live-tested by the author yet (Rovo was unavailable on the test site); implemented per `manifest.yml`.*
 Open Rovo chat → agent **HandoffIQ** → "Which of my handovers are not ready, and why?" The agent calls the actions listed in `manifest.yml`; it can propose changes but not approve them.
 
 ## Permission behaviour to try

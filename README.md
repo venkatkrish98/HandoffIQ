@@ -38,7 +38,7 @@ Rovo agent ── Rovo actions ────────────────�
 
 No external AI provider or third-party service is used; nothing leaves Atlassian. Conversational reasoning is provided by Atlassian's own Rovo agent over the same tools.
 
-## Install (development environment)
+## Install (development environment, or the production install link in the Devpost submission)
 
 Prerequisites: Node.js 22/24 (Forge CLI 14.2.0 used here), an Atlassian account, a site with Jira and Confluence (a free Forge developer site: `forge site provision`).
 
@@ -66,6 +66,10 @@ forge lint
 ```
 
 ## Honest limitations
+
+* **Live testing status.** The full Jira flow (retrieval, analysis, approval, issue creation, audit trail) was run live on a real Atlassian site. The Confluence read/write paths and the Rovo agent are implemented and covered by unit tests of the shared logic, but they have **not** yet been exercised live because Confluence could not be provisioned on the test site at the time of writing. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
+* **No generative AI.** Analysis is deterministic and rule-based. The Rovo agent only calls the same actions.
+* **Demo video narration** is AI-generated text-to-speech (Microsoft neural voice); the screen recording is the real app.
 
 See [docs/TEST-REPORT.md](docs/TEST-REPORT.md) and [docs/COMPLIANCE.md](docs/COMPLIANCE.md). In short: extraction is pattern-based and can miss unusual phrasing; "no conflicts" means "none detected"; the Rovo skill and Rovo MCP modules (early-access) and Teamwork Graph are **not** implemented.
 

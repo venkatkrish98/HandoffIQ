@@ -14,6 +14,9 @@ Forge Custom UI (React/TypeScript) on `jira:globalPage` and `confluence:globalPa
 ## Challenges
 Keeping AI honest: facts, inferences, gaps and assumptions are separated; the agent can propose but never approve. Rovo skills/MCP are early-access and development-only, so they were left out rather than faked.
 
+## Honest status
+The Jira flow was tested end to end on a real site. Confluence retrieval/page creation and the Rovo agent are implemented but not yet live-verified. Analysis is deterministic (no generative AI). The demo-video narration is AI-generated speech over a real screen recording. The app is on Runs on Atlassian (no external egress).
+
 ## Accomplishments
 19 passing unit tests that caught real defects in our own engine; responsive UI verified at desktop, tablet and phone widths; approval-gated, permission-aware execution.
 
@@ -26,4 +29,6 @@ Atlassian Forge, Rovo agents and actions, Jira Cloud REST API, Confluence Cloud 
 ## Bonus claims
 Only "Best Agents" is plausibly applicable (Rovo agent + actions); confirm 2026 wording and live-test first. No claims for MCP, Teamwork Graph or Marketplace.
 
-*Fill in before submitting: install link, repository URL, video URL, live-test results.*
+Repository: https://github.com/venkatkrish98/HandoffIQ
+
+*Fill in before submitting: install link, video URL.*

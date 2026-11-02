@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dist-mock/
+/.forge/
+.env
+.env.*
+*token*.txt
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+TEST*.xml

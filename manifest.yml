@@ -1,0 +1,128 @@
+modules:
+  jira:globalPage:
+    - key: handoffiq-global-page
+      resource: main
+      resolver:
+        function: resolver
+      title: HandoffIQ
+  confluence:globalPage:
+    - key: handoffiq-confluence-page
+      resource: main
+      resolver:
+        function: resolver
+      title: HandoffIQ
+      route: handoffiq
+  rovo:agent:
+    - key: handoffiq-agent
+      name: HandoffIQ
+      description: Analyses a handover with evidence, finds conflicts and gaps, and proposes Jira tasks and a Confluence handover page for you to approve.
+      prompt: |
+        You are HandoffIQ, an evidence-first handover assistant for project managers and delivery teams.
+
+        How you work:
+        1. Use list-handovers to see the user's handovers, then analyze-handover to retrieve fresh evidence and run the analysis.
+        2. Report only what the tools return. Separate (a) verified facts that cite a source, (b) inferences such as conflicts, (c) missing information, and (d) user-provided assumptions. Always say which is which.
+        3. Quote the readiness score together with its dimension explanations. Never describe the score as a guarantee of project success.
+        4. Use get-handover-gaps to answer questions about conflicts, owners, dates, open questions and stale sources.
+        5. Use propose-handover-actions to draft Jira tasks and a Confluence page. These are PROPOSALS ONLY. Tell the user to review and approve them in the HandoffIQ app.
+        6. Use create-approved-items only after the user says they approved items in the app. You can never approve on the user's behalf; if the tool says nothing is approved, relay that.
+
+        Boundaries: never invent evidence, issue keys, URLs or dates. If a tool reports an error, a permission problem or an inaccessible source, say so plainly instead of guessing.
+      conversationStarters:
+        - Which of my handovers are not ready, and why?
+        - Analyze my Northwind onboarding handover
+        - What conflicts and open questions block this handover?
+        - Propose the Jira tasks needed to close the gaps
+      actions:
+        - list-handovers
+        - analyze-handover
+        - get-handover-gaps
+        - propose-handover-actions
+        - create-approved-items
+  action:
+    - key: list-handovers
+      name: List handovers
+      function: listHandovers
+      actionVerb: GET
+      description: Lists the current user's handovers with readiness score, open question count and approval status.
+      inputs:
+        filter:
+          title: Filter
+          type: string
+          required: false
+          description: Optional text to filter by handover name.
+    - key: analyze-handover
+      name: Analyze handover
+      function: analyzeHandover
+      actionVerb: UPDATE
+      description: Retrieves fresh evidence from the Jira projects and Confluence pages linked to a handover, runs the analysis and returns the readiness score, conflicts and open questions with sources.
+      inputs:
+        handoverName:
+          title: Handover name
+          type: string
+          required: true
+          description: The name (or part of the name) of the handover to analyze.
+    - key: get-handover-gaps
+      name: Get handover gaps
+      function: getHandoverGaps
+      actionVerb: GET
+      description: Returns the stored analysis for a handover - readiness, conflicts, open questions and stale sources - without re-fetching evidence.
+      inputs:
+        handoverName:
+          title: Handover name
+          type: string
+          required: true
+          description: The name (or part of the name) of the handover.
+    - key: propose-handover-actions
+      name: Propose handover actions
+      function: proposeHandoverActions
+      actionVerb: UPDATE
+      description: Drafts Jira tasks and a Confluence handover page for a handover. Proposals only; nothing is created until the user approves them in the HandoffIQ app.
+      inputs:
+        handoverName:
+          title: Handover name
+          type: string
+          required: true
+          description: The name (or part of the name) of the handover.
+    - key: create-approved-items
+      name: Create approved items
+      function: createApprovedItems
+      actionVerb: CREATE
+      description: Creates Jira issues or a Confluence page that the user has ALREADY approved in the HandoffIQ app (for example to retry items that failed). Refuses if nothing is approved.
+      inputs:
+        handoverName:
+          title: Handover name
+          type: string
+          required: true
+          description: The name (or part of the name) of the handover.
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: listHandovers
+      handler: index.listHandovers
+    - key: analyzeHandover
+      handler: index.analyzeHandover
+    - key: getHandoverGaps
+      handler: index.getHandoverGaps
+    - key: proposeHandoverActions
+      handler: index.proposeHandoverActions
+    - key: createApprovedItems
+      handler: index.createApprovedItems
+resources:
+  - key: main
+    path: static/app/dist
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+    - read:jira-user
+    - read:page:confluence
+    - write:page:confluence
+    - read:space:confluence
+    - storage:app
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/e68f72e1-81ae-4e1a-b52a-9315f7c103c8

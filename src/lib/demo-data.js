@@ -9,7 +9,7 @@ export const DEMO_PAGES = [
   {
     title: 'Customer Onboarding Workflow – Requirements (Demo)',
     lines: [
-      'Project: Northwind Customer Onboarding Workflow (synthetic demo).',
+      'Project: Harbor Ridge Customer Onboarding Workflow (synthetic demo).',
       'Requirement: New customers must receive a welcome email within 5 minutes of signing the contract.',
       'Requirement: The workflow should support single sign-on for the customer admin.',
       'Requirement: Onboarding progress must be visible on a shared dashboard.',

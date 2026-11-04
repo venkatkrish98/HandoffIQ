@@ -1,4 +1,4 @@
-# Demo narration (target 3:30, hard limit < 5:00)
+# Demo narration (core inside 3:00; target ≤ 3:30; hard limit < 5:00)
 
 Spoken text, one block per scene. Do not record until the live end-to-end run (Jira + Confluence) passes.
 

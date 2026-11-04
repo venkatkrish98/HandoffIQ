@@ -55,7 +55,7 @@ export async function mockInvoke(name: string, p: Record<string, any>): Promise<
       case 'listPages': return ok([{ id: '2001', title: 'Customer Onboarding Workflow – Requirements (Demo)' }, { id: '2002', title: 'Onboarding Kickoff Meeting Notes (Demo)' }]);
       case 'listIssues': return ok([{ key: 'ONB-1', summary: 'Design welcome email sequence', status: 'To Do' }, { key: 'ONB-4', summary: 'Define data migration format', status: 'Blocked' }]);
       case 'loadDemo': {
-        const id = create({ name: 'Northwind – Customer Onboarding Workflow (demo)', sourceTeam: 'Sales Engineering', receivingTeam: 'Implementation', description: 'Synthetic demo: client wants a new customer onboarding workflow.', priority: 'High', expectedDelivery: '2026-12-15', notes: 'Assumption: the legacy CRM export will be available by mid-November.' }, true);
+        const id = create({ name: 'Harbor Ridge – Customer Onboarding Workflow (demo)', sourceTeam: 'Sales Engineering', receivingTeam: 'Implementation', description: 'Synthetic demo: client wants a new customer onboarding workflow.', priority: 'High', expectedDelivery: '2026-12-15', notes: 'Assumption: the legacy CRM export will be available by mid-November.' }, true);
         run(id);
         return ok(withFresh(id));
       }

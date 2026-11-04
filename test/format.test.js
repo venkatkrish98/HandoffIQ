@@ -6,7 +6,7 @@ import {
   HandoffError, escapeHtml, storageToText, adfToText, textToAdf, validateHandoverInput, redact, buildPlan, buildConfluenceDoc, assertId,
 } from '../src/lib/format.js';
 
-const valid = { name: 'Northwind', sourceTeam: 'Sales', receivingTeam: 'Delivery', priority: 'High', expectedDelivery: '2026-12-15', jiraProjectKeys: ['ONB'], pageIds: ['12345'] };
+const valid = { name: 'Harbor Ridge', sourceTeam: 'Sales', receivingTeam: 'Delivery', priority: 'High', expectedDelivery: '2026-12-15', jiraProjectKeys: ['ONB'], pageIds: ['12345'] };
 
 test('storageToText strips markup, decodes entities and keeps line breaks', () => {
   const t = storageToText('<h1>Title</h1><p>Must &amp; should</p><ul><li>One</li><li>Two</li></ul><script>x</script>');
@@ -21,8 +21,8 @@ test('adfToText flattens paragraphs; textToAdf round-trips', () => {
 });
 
 test('validateHandoverInput accepts valid input and normalises it', () => {
-  const v = validateHandoverInput({ ...valid, name: '  Northwind  ' });
-  assert.equal(v.name, 'Northwind');
+  const v = validateHandoverInput({ ...valid, name: '  Harbor Ridge  ' });
+  assert.equal(v.name, 'Harbor Ridge');
   assert.deepEqual(v.jiraProjectKeys, ['ONB']);
 });
 
@@ -48,7 +48,7 @@ test('escapeHtml and redact neutralise markup and secrets', () => {
 test('buildPlan proposes Jira issues for conflicts and one Confluence page, all unexecuted', () => {
   const sources = demoSources();
   const analysis = analyze(sources, { expectedDelivery: '2026-12-15' });
-  const plan = buildPlan({ name: 'Northwind' }, analysis, sources);
+  const plan = buildPlan({ name: 'Harbor Ridge' }, analysis, sources);
   assert.ok(plan.some((p) => p.type === 'jira-issue' && /conflict/i.test(p.title)));
   assert.equal(plan.filter((p) => p.type === 'confluence-page').length, 1);
   assert.ok(plan.every((p) => p.status === 'proposed'));

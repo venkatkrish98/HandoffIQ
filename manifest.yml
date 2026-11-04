@@ -30,7 +30,7 @@ modules:
         Boundaries: never invent evidence, issue keys, URLs or dates. If a tool reports an error, a permission problem or an inaccessible source, say so plainly instead of guessing.
       conversationStarters:
         - Which of my handovers are not ready, and why?
-        - Analyze my Northwind onboarding handover
+        - Analyze my Harbor Ridge onboarding handover
         - What conflicts and open questions block this handover?
         - Propose the Jira tasks needed to close the gaps
       actions:

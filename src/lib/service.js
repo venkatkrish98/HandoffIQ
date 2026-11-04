@@ -235,7 +235,7 @@ export async function listHandoverSummaries(me) {
 /** Offline scenario: runs the real engine over clearly-labelled synthetic sources. */
 export async function loadDemoScenario(me) {
   const rec = await createHandover(me, {
-    name: 'Northwind – Customer Onboarding Workflow (demo)',
+    name: 'Harbor Ridge – Customer Onboarding Workflow (demo)',
     sourceTeam: 'Sales Engineering',
     receivingTeam: 'Implementation',
     description: 'Synthetic demo: client wants a new customer onboarding workflow.',

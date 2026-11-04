@@ -1,4 +1,6 @@
-# Demo video plan (target 3:30, hard cap under 5:00) – NOT yet recorded or published
+# Demo video plan (core inside 3:00 because judges need not watch beyond 3:00; total ≤ 3:30, hard cap < 5:00)
+
+Recording rules: collapse the Jira navigation sidebar (it lists third-party app logos), no music, show only features that work live, use the fictional company Harbor Ridge.
 
 Record only after the live end-to-end run passes. Upload to YouTube only with the owner's approval.
 

@@ -16,12 +16,12 @@ Source: the Devpost **overview page text**, pasted by the owner on 2026-11-01. T
 
 | Requirement | Status |
 |---|---|
-| Installation link for judges ("Start sharing your app") | ❌ **Not done.** Needs a production deploy and a sharing link from the Developer console. |
-| Demo video < 5 min, **public on YouTube** | ❌ Not recorded or uploaded (needs the owner's approval to publish). |
+| Installation link for judges ("Start sharing your app") | ✅ Production v2.0.0 deployed; distribution set to "Sharing with anyone" (Jira + Confluence). Link in `docs/INSTALL-LINK.txt`. |
+| Demo video < 5 min, **public on YouTube** | ⚠ A 3:08 Jira-only draft was recorded and reviewed by the owner; it must be re-recorded with the Confluence scenes and uploaded by the owner (YouTube/Google login cannot be automated). |
 | Category + bonus selection with supporting material | ✅ Drafted in `docs/DEVPOST.md` |
 | Explanation of how the project meets the technology requirement | ✅ Drafted in `docs/DEVPOST.md` |
 | Complete the Devpost form before the deadline | ❌ Not submitted (owner approval required). |
-| Public GitHub repo + OSS licence (from owner's brief) | ⚠ MIT licence present; repo not published. |
+| Public GitHub repo + OSS licence | ✅ https://github.com/venkatkrish98/HandoffIQ (public, MIT). |
 
 ## Open eligibility questions (⚠ must be answered from the full rules)
 * Is the owner's country of residence (India) on the excluded list?
@@ -38,5 +38,6 @@ Source: the Devpost **overview page text**, pasted by the owner on 2026-11-01. T
 
 ## Notes
 * `rovo:skill` and `rovo:mcp` are early-access and deploy only to development environments (docs, 2026-11-01).
+* Privacy policy and terms: `docs/PRIVACY.md`, `docs/TERMS.md` (used in the distribution form).
 * The demo site `one-atlas-xzpf.atlassian.net` expires **2027-01-30**.
 * Forge CLI 15.0 needs a newer Node patch; CLI 14.2.0 is used.

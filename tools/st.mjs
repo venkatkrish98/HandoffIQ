@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const b = await chromium.connectOverCDP('http://127.0.0.1:9222');
+const pages = b.contexts()[0].pages();
+for (const p of pages) console.log(p.url().slice(0, 130));
+const pg = pages[0];
+console.log((await pg.locator('body').innerText().catch(()=>'')).slice(0, 300) || '(blank)');
+const tab = await b.contexts()[0].newPage();
+await tab.goto('https://venkatswamy2304.atlassian.net/wiki/spaces', { waitUntil: 'domcontentloaded' });
+await tab.waitForTimeout(8000);
+console.log('SITE', tab.url().slice(0, 120));
+console.log((await tab.locator('body').innerText().catch(()=>'')).slice(0, 300));
+await tab.close();
+await b.close();

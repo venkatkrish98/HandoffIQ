@@ -60,6 +60,7 @@ export async function mockInvoke(name: string, p: Record<string, any>): Promise<
         return ok(withFresh(id));
       }
       case 'createHandover': return ok(db.recs[create(p.input, true)]);
+      case 'issueHandovers': return ok(Object.values(db.recs).map((r: any) => ({ id: r.id, name: r.name, sourceTeam: r.sourceTeam, receivingTeam: r.receivingTeam, priority: r.priority, expectedDelivery: r.expectedDelivery, demo: r.demo, updatedAt: r.updatedAt, approval: r.approval.status, score: r.history.at(-1)?.score ?? null, band: db.an[r.id]?.readiness.band ?? null, openQuestions: db.an[r.id] ? db.an[r.id].questions.filter((q: any) => q.status === 'open').length : 0, analyzed: !!db.an[r.id], via: 'issue' })));
       case 'listHandovers': return ok(Object.values(db.recs).map((r: any) => ({ id: r.id, name: r.name, sourceTeam: r.sourceTeam, receivingTeam: r.receivingTeam, priority: r.priority, expectedDelivery: r.expectedDelivery, demo: r.demo, updatedAt: r.updatedAt, approval: r.approval.status, score: r.history.at(-1)?.score ?? null, band: db.an[r.id]?.readiness.band ?? null, openQuestions: db.an[r.id] ? db.an[r.id].questions.filter((q: any) => q.status === 'open').length : 0, analyzed: !!db.an[r.id] })));
       case 'getHandover': if (!db.recs[p.id]) return fail('NOT_FOUND', 'Handover not found.'); return ok(withFresh(p.id));
       case 'runAnalysis': run(p.id); return ok(withFresh(p.id));

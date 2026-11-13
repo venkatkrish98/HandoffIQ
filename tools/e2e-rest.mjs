@@ -1,0 +1,13 @@
+import { attach, frameOf } from './lib.mjs';
+const { b, pg } = await attach();
+const fr = frameOf(pg) || pg.frames().find((f) => f !== pg.mainFrame());
+const log = (...a) => console.log(...a);
+await fr.getByRole('button', { name: 'Continue' }).click(); await pg.waitForTimeout(1000);
+log((await fr.locator('#main').innerText()).slice(0, 700));
+await fr.getByRole('button', { name: /Create and analyze/ }).click();
+await fr.waitForSelector('text=Why this score', { timeout: 120000 }); await pg.waitForTimeout(1500);
+log('--- OVERVIEW ---'); log((await fr.locator('#main').innerText()).slice(0, 900));
+await fr.getByRole('tab', { name: /Conflicts/ }).click(); await pg.waitForTimeout(1200);
+log('--- CONFLICTS ---'); log((await fr.locator('#main').innerText()).slice(0, 900));
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

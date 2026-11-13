@@ -11,3 +11,5 @@ dist-mock/
 .DS_Store
 Thumbs.db
 TEST*.xml
+tools/.profile/
+tools/out/

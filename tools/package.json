@@ -1,0 +1,1 @@
+{ "name": "handoffiq-tools", "private": true, "type": "module", "description": "Local QA and demo-recording helpers (not part of the Forge app)", "dependencies": { "playwright": "^1.55.0" } }

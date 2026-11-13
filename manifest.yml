@@ -5,6 +5,13 @@ modules:
       resolver:
         function: resolver
       title: HandoffIQ
+  jira:issuePanel:
+    - key: handoffiq-issue-panel
+      resource: main
+      resolver:
+        function: resolver
+      title: HandoffIQ handover status
+      icon: resource:main;panel-icon.svg
   confluence:globalPage:
     - key: handoffiq-confluence-page
       resource: main

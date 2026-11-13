@@ -1,0 +1,13 @@
+import { attach, frameOf } from './lib.mjs';
+const { b, pg } = await attach();
+const fr = frameOf(pg);
+await fr.getByRole('option', { name: /Software Development/ }).click(); await pg.waitForTimeout(500);
+await fr.getByRole('combobox', { name: 'Jira project', exact: true }).click(); await pg.waitForTimeout(500);
+await fr.getByRole('option', { name: /Customer Onboarding/ }).first().click(); await pg.waitForTimeout(500);
+await fr.getByLabel('I approve creating this sample content').check();
+await fr.getByRole('button', { name: 'Approve & create' }).click();
+await fr.waitForSelector('text=/Created \d+ page\(s\) and \d+ issue\(s\)|error|failed|could not/i', { timeout: 120000 });
+await pg.waitForTimeout(1500);
+console.log((await fr.locator('#main').innerText()).slice(0, 1500));
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

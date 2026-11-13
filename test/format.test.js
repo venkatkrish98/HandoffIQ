@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { analyze } from '../src/lib/engine.js';
 import { demoSources } from '../src/lib/demo-data.js';
 import {
-  HandoffError, escapeHtml, storageToText, adfToText, textToAdf, validateHandoverInput, redact, buildPlan, buildConfluenceDoc, assertId,
+  HandoffError, escapeHtml, storageToText, adfToText, textToAdf, validateHandoverInput, redact, buildPlan, buildConfluenceDoc, assertId, PATTERNS,
 } from '../src/lib/format.js';
 
 const valid = { name: 'Harbor Ridge', sourceTeam: 'Sales', receivingTeam: 'Delivery', priority: 'High', expectedDelivery: '2026-12-15', jiraProjectKeys: ['ONB'], pageIds: ['12345'] };
@@ -68,4 +68,10 @@ test('buildConfluenceDoc includes all required sections and escapes injected HTM
   }
   assert.ok(!doc.includes('<script>'));
   assert.ok(!doc.includes('<b>x</b>'));
+});
+
+test('PATTERNS accept real keys and numeric ids, reject junk', () => {
+  assert.ok(PATTERNS.issueKey.test('KAN-12') && PATTERNS.issueKey.test('SAM1-3'));
+  assert.ok(!PATTERNS.issueKey.test('kan-12') && !PATTERNS.issueKey.test('KAN-d'));
+  assert.ok(PATTERNS.pageId.test('360449') && !PATTERNS.pageId.test('abc') && !PATTERNS.pageId.test('1; drop'));
 });

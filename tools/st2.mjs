@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.connectOverCDP('http://127.0.0.1:9222');
+const tab = await b.contexts()[0].newPage();
+await tab.goto('https://handoffiq-test.atlassian.net/jira', { waitUntil: 'domcontentloaded' });
+await tab.waitForTimeout(8000);
+console.log('JIRA', tab.url().slice(0, 120));
+console.log((await tab.locator('body').innerText().catch(()=>'')).slice(0, 200));
+const r = await tab.evaluate(async () => (await fetch('/wiki/api/v2/spaces?limit=5', {credentials:'include'})).status).catch(e=>String(e));
+console.log('WIKI API', r);
+await tab.close(); await b.close();

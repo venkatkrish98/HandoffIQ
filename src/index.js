@@ -36,6 +36,7 @@ function define(name, fn) {
 define('me', (me) => me);
 define('dashboard', (me) => svc.dashboard(me));
 define('listHandovers', (me) => svc.listHandoverSummaries(me));
+define('issueHandovers', (me, p) => svc.handoversForIssue(me, p.issueKey));
 define('getHandover', (me, p) => svc.getHandover(me, assertId(p.id)));
 define('createHandover', (me, p) => svc.createHandover(me, p.input));
 define('runAnalysis', (me, p) => svc.runAnalysis(me, assertId(p.id)));

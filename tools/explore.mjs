@@ -1,0 +1,18 @@
+import { attach, openApp } from './lib.mjs';
+const { b, pg } = await attach();
+await pg.setViewportSize({ width: 1600, height: 900 });
+const fr = await openApp(pg);
+await fr.getByRole('button', { name: /New handover/ }).first().click(); await pg.waitForTimeout(800);
+await fr.getByLabel('Project / customer name').fill('Harbor Ridge – Customer Onboarding Workflow');
+await fr.getByLabel('Source team').fill('Sales Engineering');
+await fr.getByLabel('Receiving team').fill('Implementation');
+await fr.getByRole('combobox', { name: 'Business priority' }).click(); await fr.getByRole('option', { name: 'High' }).click();
+await fr.getByRole('button', { name: /Expected delivery date/ }).click(); await pg.waitForTimeout(500);
+await fr.getByRole('button', { name: 'Next month' }).click(); await pg.waitForTimeout(300);
+const d = fr.locator('[data-date]').filter({ hasText: /^15$/ }).first(); console.log('date cell', await d.getAttribute('data-date')); await d.click();
+await fr.getByLabel('Project description').fill('Client wants a new customer onboarding workflow.');
+await fr.getByRole('button', { name: 'Continue' }).click(); await pg.waitForTimeout(2500);
+await fr.getByRole('button', { name: /Create sample content/ }).click(); await pg.waitForTimeout(1500);
+console.log((await fr.locator('#main').innerText()).slice(0, 900));
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

@@ -230,6 +230,19 @@ export async function listHandoverSummaries(me) {
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
+/** Handovers (of the current user) that include a given Jira issue, directly or through its project. */
+export async function handoversForIssue(me, issueKey) {
+  const key = String(issueKey || '').toUpperCase();
+  if (!PATTERNS.issueKey.test(key)) throw new HandoffError('VALIDATION', 'Invalid issue key.');
+  const project = key.split('-')[0];
+  const all = await listHandoverSummaries(me);
+  const recs = new Map((await store.listHandovers(me.accountId)).map((r) => [r.id, r]));
+  return all.filter((h) => {
+    const r = recs.get(h.id);
+    return r && ((r.jiraIssueKeys || []).includes(key) || (r.jiraProjectKeys || []).includes(project));
+  }).map((h) => ({ ...h, via: (recs.get(h.id).jiraIssueKeys || []).includes(key) ? 'issue' : 'project' }));
+}
+
 /* ---------- demo scenario ---------- */
 
 /** Offline scenario: runs the real engine over clearly-labelled synthetic sources. */
@@ -254,7 +267,7 @@ export async function loadDemoScenario(me) {
 export async function seedDemoData(me, { projectKey, spaceId }) {
   if (!PATTERNS.projectKey.test(projectKey || '')) throw new HandoffError('VALIDATION', 'Choose a Jira project.');
   const withPages = !!spaceId;
-  if (withPages && !/^d{1,20}$/.test(String(spaceId))) throw new HandoffError('VALIDATION', 'Choose a valid Confluence space.');
+  if (withPages && !PATTERNS.pageId.test(String(spaceId))) throw new HandoffError('VALIDATION', 'Choose a valid Confluence space.');
   const pages = [];
   const issues = [];
   for (const p of DEMO_PAGES) {

@@ -1,0 +1,11 @@
+{
+  "s1": "When work moves between teams, the context gets lost. Requirements sit in Confluence, tasks live in Jira, decisions hide in meeting notes. An ordinary summary smooths over the conflicts. HandoffIQ shows them, with evidence, and changes nothing until you approve.",
+  "s2": "I'm inside Jira, running HandoffIQ, a Forge app. I name the handover, set the teams, the priority and the expected delivery date.",
+  "s2b": "Then I choose my sources, a Jira project and Confluence pages. HandoffIQ reads only what my own Atlassian permissions allow. For this demo I create clearly labelled sample content, after approving it.",
+  "s3": "HandoffIQ retrieved the real issues and pages, and extracted requirements, decisions, dependencies and risks. Every item quotes the exact sentence it came from, and links back to the source. Each one is labelled verified, inferred, missing, or assumption.",
+  "s4": "Here is what a summary would hide. One source says Priya Raman owns the workflow, another says Marcus Lee. Two sources give different go-live dates, and neither matches the date on the handover. Each conflict shows both sides, side by side.",
+  "s5": "The readiness score is fully explained, seven weighted dimensions, each with its reason. It measures how complete the information is, not whether the project will succeed. Open problems become questions that I can assign, answer and resolve.",
+  "s6": "Now the part that matters. HandoffIQ proposes Jira tasks and a Confluence handover page. I review exactly what will be created, choose the project and the space, confirm, and approve. Forge creates everything as me, with my permissions.",
+  "s7": "Here are the real Jira issues with real keys, and the real Confluence page, with the score, the evidence and the open questions. Every action lands in the audit trail, who approved it, when, and the result.",
+  "s8": "HandoffIQ. Never lose context between teams."
+}

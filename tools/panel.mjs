@@ -1,0 +1,12 @@
+import { attach, SITE } from './lib.mjs';
+const { b, pg } = await attach();
+await pg.keyboard.press('Escape'); await pg.waitForTimeout(800);
+await pg.getByRole('button', { name: 'Get started' }).click({ timeout: 2000 }).catch(() => {});
+await pg.waitForTimeout(2500);
+await pg.goto(`${SITE}/browse/KAN-5`, { waitUntil: 'domcontentloaded' });
+await pg.waitForTimeout(9000);
+console.log('PANEL TITLE FOUND', await pg.getByText(/HandoffIQ handover status/).count());
+const more = pg.getByRole('button', { name: /Apps|HandoffIQ/ });
+await pg.mouse.wheel(0, 700); await pg.waitForTimeout(1500);
+await pg.screenshot({ path: 'out-issue.png' });
+await b.close();

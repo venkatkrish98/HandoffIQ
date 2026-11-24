@@ -33,18 +33,23 @@ Date parsing; freshness classification; extraction of requirements/decisions/dep
 | App loads inside Jira (Custom UI, global page), light theme | passed |
 | Dashboard resolver + Forge KVS read | passed (after fix below) |
 | Synthetic demo end-to-end on Forge: analysis stored, 3 conflicts detected (owner, date, date-vs-form), 7 questions, 9 proposed changes | **passed** |
-| Jira project list / Confluence space list (`asUser` calls) | ❌ **failing**: backend throws "Authentication Required"; the frontend bridge gets 401 (Jira) / 404 (Confluence) from `api.atlassian.com` even though the extension token carries the right scopes. Not yet resolved; suspected site/org-level restriction on this demo site. |
-| Real Jira issue / Confluence page creation | ❌ **not verified** (blocked by the above) |
-| Rovo agent in Rovo chat | not tested |
+| Live run on a second, fresh site (handoffiq-test, production build installed on Jira + Confluence, 2026-11-13) | see below |
+| Jira project list, Confluence space list (`asUser`) | **passed** (2 spaces listed) |
+| Create sample content incl. 2 Confluence pages in a chosen space | **passed** (after fixing the space-id regex bug below) |
+| Retrieve 4 Jira issues + 2 Confluence pages, analyze | **passed**: 6 sources, 5 requirements, 4 decisions, 3 conflicts (owner, date, date vs form), 7 questions, readiness 41 |
+| Approve and execute plan: real Jira issues (KAN-5 to KAN-12) and a real Confluence page "Handover: Harbor Ridge ..." | **passed**, page opened and rendered in Confluence |
+| Jira issue panel "HandoffIQ handover status" | **passed** (renders; listing for an issue not in any handover verified) |
+| Rovo agent in Rovo chat | ❌ **not tested**: Rovo/agents were not available on the test site (admin Agents page showed no sites) |
 
-Bugs found only by the live run and fixed: (1) `@forge/resolver` default import resolved to a namespace object under `"type": "module"` ("not a constructor"); (2) Forge KVS rejects `null` values ("Provided request body is invalid").
+Bugs found only by the live runs and fixed: (1) `@forge/resolver` default import resolved to a namespace object ("not a constructor"); (2) Forge KVS rejects `null` values; (3) two validation regexes had lost a backslash (`/^d{1,20}$/` instead of digits), which rejected every Confluence space id; now uses the shared, unit-tested `PATTERNS`.
+
+Earlier site (one-atlas-xzpf) returned 401 for every user-token call, so it was abandoned. The Jira-only flow was also verified on venkatswamy2304.atlassian.net (real issue creation, audit trail).
 
 ## NOT yet executed (do not treat as passed)
 
-* **Live end-to-end on the installed app**: the Forge API token cannot call site REST APIs, and UI login requires the human user. Pending: create handover from real Jira/Confluence data, real issue creation, real page creation, permission-failure paths against a restricted user.
 * **Rovo agent** conversation in Rovo chat.
-* Automated end-to-end tests against Atlassian (not feasible without an authenticated browser session).
-* Screen-reader testing; only keyboard/focus structure and ARIA roles were implemented, not audited with assistive tech.
+* Permission-failure paths against a restricted user.
+* Screen-reader testing; only keyboard/focus structure and ARIA roles were implemented.
 
 ## Known limitations
 * Pattern-based extraction (English); misses unusual phrasing; contradiction detection needs similar wording.

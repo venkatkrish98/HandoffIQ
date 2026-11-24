@@ -13,3 +13,6 @@ Thumbs.db
 TEST*.xml
 tools/.profile/
 tools/out/
+tools/.piper/
+tools/out-*.png
+tools/*.log

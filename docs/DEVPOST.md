@@ -15,7 +15,7 @@ Forge Custom UI (React/TypeScript) on `jira:globalPage` and `confluence:globalPa
 Keeping AI honest: facts, inferences, gaps and assumptions are separated; the agent can propose but never approve. Rovo skills/MCP are early-access and development-only, so they were left out rather than faked.
 
 ## Honest status
-The Jira flow was tested end to end on a real site. Confluence retrieval/page creation and the Rovo agent are implemented but not yet live-verified. Analysis is deterministic (no generative AI). The demo-video narration is AI-generated speech over a real screen recording. The app is on Runs on Atlassian (no external egress).
+Jira and Confluence flows (retrieval, analysis, approval, real issues and a real Confluence page, audit trail, issue panel) were tested end to end on a real site. The Rovo agent is implemented but not yet live-verified. Analysis is deterministic (no generative AI). The demo-video narration is AI-generated speech over a real screen recording. The app is on Runs on Atlassian (no external egress).
 
 ## How it meets the technology requirement
 HandoffIQ is a Forge app (Custom UI, resolvers, Key-Value Store, `jira:globalPage`, `confluence:globalPage`) that integrates Jira (REST v3: projects, issues, search, create, link), Confluence (REST v2: spaces, pages, create) and Rovo (`rovo:agent` + five `action` modules). All calls run as the invoking user via `asUser`.

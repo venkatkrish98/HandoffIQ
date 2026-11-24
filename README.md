@@ -67,7 +67,7 @@ forge lint
 
 ## Honest limitations
 
-* **Live testing status.** The full Jira flow (retrieval, analysis, approval, issue creation, audit trail) was run live on a real Atlassian site. The Confluence read/write paths and the Rovo agent are implemented and covered by unit tests of the shared logic, but they have **not** yet been exercised live because Confluence could not be provisioned on the test site at the time of writing. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
+* **Live testing status.** The full Jira and Confluence flow (retrieval, analysis, approval, real issue and page creation, audit trail, issue panel) was run live on a real Atlassian site. The Rovo agent is implemented per the manifest but has **not** been exercised in Rovo chat because Rovo agents were not available on the test site. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
 * **No generative AI.** Analysis is deterministic and rule-based. The Rovo agent only calls the same actions.
 * **Demo video narration** is AI-generated text-to-speech (Microsoft neural voice); the screen recording is the real app.
 

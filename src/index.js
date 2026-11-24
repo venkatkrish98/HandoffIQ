@@ -16,7 +16,7 @@ async function currentUser(req) {
     const me = await atl.whoAmI().catch(() => ({ displayName: 'Atlassian user' }));
     names.set(accountId, me.displayName);
   }
-  return { accountId, displayName: names.get(accountId) };
+  return { accountId, displayName: names.get(accountId), cloudId: req.context?.cloudId };
 }
 
 /** Wrap a resolver so every response is { ok, data } or { ok:false, error } and nothing sensitive leaks. */
@@ -36,6 +36,7 @@ function define(name, fn) {
 define('me', (me) => me);
 define('dashboard', (me) => svc.dashboard(me));
 define('listHandovers', (me) => svc.listHandoverSummaries(me));
+define('graphContext', (me, p) => svc.graphContext(me, assertId(p.id)));
 define('issueHandovers', (me, p) => svc.handoversForIssue(me, p.issueKey));
 define('getHandover', (me, p) => svc.getHandover(me, assertId(p.id)));
 define('createHandover', (me, p) => svc.createHandover(me, p.input));

@@ -1,0 +1,10 @@
+import { attach, openApp } from './lib.mjs';
+const { b, pg } = await attach();
+await pg.setViewportSize({ width: 1600, height: 900 });
+const fr = await openApp(pg);
+await fr.getByRole('button', { name: /^Handovers$/ }).click(); await pg.waitForTimeout(1500);
+await fr.locator('.table.responsive .linkish, .cards-list button').first().click(); await pg.waitForTimeout(8000);
+const el = fr.locator('#twg').locator('xpath=ancestor::section');
+console.log((await el.innerText()).slice(0, 900));
+await el.scrollIntoViewIfNeeded(); await pg.screenshot({ path: 'out-twg.png' });
+await b.close();

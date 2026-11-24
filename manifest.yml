@@ -126,6 +126,7 @@ permissions:
     - read:page:confluence
     - write:page:confluence
     - read:space:confluence
+    - read:graph:page:confluence
     - storage:app
 app:
   runtime:

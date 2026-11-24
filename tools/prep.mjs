@@ -1,7 +1,7 @@
 // Clean-slate for recording: deletes ONLY the app-created demo issues and the three named Confluence pages. Pass "delete" to apply.
 import { attach, SITE } from './lib.mjs';
 const apply = process.argv[2] === 'delete';
-const PAGE_TITLES = ['Customer Onboarding Workflow – Requirements (Demo)', 'Onboarding Kickoff Meeting Notes (Demo)', 'Handover: Harbor Ridge – Customer Onboarding Workflow'];
+const PAGE_TITLES = ['Customer Onboarding Workflow – Requirements (Demo)', 'Onboarding Kickoff Meeting Notes (Demo)', 'Handover: Harbor Ridge – Customer Onboarding Workflow', 'Billing System Integration Notes (Demo)'];
 const { b, ctx } = await attach();
 const tab = await ctx.newPage();
 await tab.goto(`${SITE}/wiki/spaces`, { waitUntil: 'domcontentloaded' }); await tab.waitForTimeout(3000);

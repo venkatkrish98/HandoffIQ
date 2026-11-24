@@ -94,6 +94,34 @@ export function Detail({ id, back }: { id: string; back: () => void }) {
   );
 }
 
+/* ---------------- Teamwork Graph context ---------------- */
+interface GraphRelated { id: string; title: string; url: string; linkedFromTitles: string[] }
+interface GraphResult { checked: number; related: GraphRelated[]; note?: string; error?: string | null }
+
+function GraphContext({ id }: { id: string }) {
+  const [res, setRes] = useState<GraphResult | null>(null);
+  const [err, setErr] = useState('');
+  useEffect(() => { let live = true; call<GraphResult>('graphContext', { id }).then((r) => live && setRes(r), (e) => live && setErr(msg(e))); return () => { live = false; }; }, [id]);
+  return (
+    <section className="card" aria-labelledby="twg">
+      <div className="head"><h2 id="twg">Related context from the Teamwork Graph</h2><span className="badge">Preview API · read-only</span></div>
+      <p className="muted small" style={{ marginBottom: 10 }}>Pages that Atlassian's Teamwork Graph links to your Confluence sources but that are <strong>not</strong> in this handover. Possible missing context. Results are filtered by your own permissions.</p>
+      {err && <p className="small">Could not query the Teamwork Graph: {err}</p>}
+      {!err && !res && <LoadingBlock label="Asking the Teamwork Graph" />}
+      {res?.note && <p className="small">{res.note}</p>}
+      {res?.error && <p className="small">Teamwork Graph answered with an error for some pages: {res.error}</p>}
+      {res && !res.note && !res.related.length && !res.error && <p className="small">Checked {res.checked} page(s); the graph reports no other linked pages.</p>}
+      {res && res.related.length > 0 && (
+        <ul className="stack" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {res.related.map((p) => (
+            <li key={p.id}><span className="badge">confluence</span> <ExtLink href={p.url}>{p.title}</ExtLink><br /><span className="muted small">Linked from: {p.linkedFromTitles.join(', ')}</span></li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 /* ---------------- Overview ---------------- */
 function Overview({ h, a, update }: { h: Handover; a: Analysis; update: (p: Payload) => void }) {
   const [confirm, setConfirm] = useState<null | 'approved' | 'rejected'>(null);
@@ -154,6 +182,8 @@ function Overview({ h, a, update }: { h: Handover; a: Analysis; update: (p: Payl
         ))}
         {r.penalty > 0 && <p className="small" style={{ marginTop: 10 }}>Contradiction penalty: −{r.penalty} points.</p>}
       </section>
+
+      <GraphContext id={h.id} />
 
       <div className="grid two">
         <section className="card" aria-labelledby="src">

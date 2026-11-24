@@ -24,7 +24,10 @@ HandoffIQ is a Forge app (Custom UI, resolvers, Key-Value Store, `jira:globalPag
 Open the install link, install on Jira (and Confluence if you want page creation), accept the scopes, then open Apps → HandoffIQ. Use **Try the synthetic demo** or **New handover → Create sample content**. Details: docs/JUDGE-GUIDE.md. The Rovo agent needs Rovo enabled on the site.
 
 ## Bonus prize: Best Agents
-The app includes the `rovo:agent` module (HandoffIQ) and five `action` modules (list, analyze, gaps, propose, create-approved). The agent can propose changes but only executes items a human already approved in the app. Not claimed: Atlassian MCP, Teamwork Graph, Marketplace.
+The app includes the `rovo:agent` module (HandoffIQ) and five `action` modules (list, analyze, gaps, propose, create-approved). The agent can propose changes but only executes items a human already approved in the app. Not claimed: Atlassian MCP, Marketplace.
+
+## Bonus prize: Teamwork Graph integration
+The app consumes data from the Teamwork Graph API: `api.asUser().requestTeamworkGraph` calls the curated query `confluencePageLinkedConfluencePages` for each Confluence page in a handover and shows pages the graph links to them that are not part of the handover (possible missing context). Read-only, runs as the signed-in user, scope `read:graph:page:confluence`. Verified live on a real site (a linked "Billing System Integration Notes" page was surfaced). It does not write data into the graph. The API is in Forge Preview.
 
 ## AI voice
 The demo-video narration is AI-generated speech (Piper TTS, MIT; en_US libritts_r voice, CC BY 4.0); the screen footage is the real app. No third-party music or logos are used.

@@ -178,3 +178,24 @@ export async function createConfluencePage({ spaceId, title, storageBody }) {
   });
   return { id: p.id, title: p.title, url: `${p._links?.base || ''}${p._links?.webui || ''}` };
 }
+
+/* ---------- Teamwork Graph (Forge Preview, read-only, runs as the user) ---------- */
+
+const GRAPH_RELATED_PAGES = `
+  query handoffiq_relatedPages($id: ID!) {
+    confluencePageLinkedConfluencePages(id: $id, first: 25) {
+      edges { node { __typename ... on ConfluencePage { id title webUrl } } }
+    }
+  }`;
+
+/** Confluence pages the Teamwork Graph links to the given page (permission-filtered for the calling user). */
+export async function graphLinkedPages(cloudId, pageId) {
+  const res = await api.asUser().requestTeamworkGraph(GRAPH_RELATED_PAGES, { id: `ari:cloud:confluence:${cloudId}:page/${pageId}` }, "handoffiq_relatedPages");
+  if (!res.ok) throw new HandoffError('UPSTREAM', `Teamwork Graph returned ${res.status}`, res.status);
+  const body = await res.json();
+  if (body.errors?.length) throw new HandoffError('UPSTREAM', `Teamwork Graph: ${redact(String(body.errors[0].message || 'query error')).slice(0, 160)}`);
+  return (body.data?.confluencePageLinkedConfluencePages?.edges || [])
+    .map((e) => e.node)
+    .filter((n) => n && n.__typename === 'ConfluencePage')
+    .map((n) => ({ id: String(n.id), title: n.title, url: n.webUrl }));
+}

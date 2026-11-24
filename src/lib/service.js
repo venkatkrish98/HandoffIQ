@@ -252,6 +252,33 @@ export async function listHandoverSummaries(me) {
   return out.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
+/**
+ * Context the Teamwork Graph links to this handover's Confluence pages but that is NOT part of the handover.
+ * Read-only; a failure never affects the analysis (the UI shows the reason).
+ */
+export async function graphContext(me, id) {
+  const { rec } = await store.getHandover(me.accountId, id);
+  if (!me.cloudId) throw new HandoffError('VALIDATION', 'Site context unavailable.');
+  const pageIds = (rec.pageIds || []).slice(0, 10);
+  if (!pageIds.length) return { checked: 0, related: [], note: 'This handover has no Confluence pages, so there is nothing to look up in the Teamwork Graph.' };
+  const selected = new Set(pageIds.map(String));
+  const found = new Map();
+  const errors = [];
+  await Promise.all(pageIds.map(async (pid) => {
+    try {
+      for (const p of await atl.graphLinkedPages(me.cloudId, pid)) {
+        if (selected.has(p.id)) continue;
+        const cur = found.get(p.id) || { ...p, linkedFrom: [] };
+        cur.linkedFrom.push(pid);
+        found.set(p.id, cur);
+      }
+    } catch (e) { errors.push(redact(e.message)); }
+  }));
+  const titles = new Map((rec.sources || []).map((s2) => [String(s2.id).replace(/^\D+/, ''), s2.title]));
+  const related = [...found.values()].map((p) => ({ ...p, linkedFromTitles: p.linkedFrom.map((x) => titles.get(String(x)) || `page ${x}`) }));
+  return { checked: pageIds.length, related, error: errors[0] || null };
+}
+
 /** Handovers (of the current user) that include a given Jira issue, directly or through its project. */
 export async function handoversForIssue(me, issueKey) {
   const key = String(issueKey || '').toUpperCase();
@@ -292,9 +319,16 @@ export async function seedDemoData(me, { projectKey, spaceId }) {
   if (withPages && !PATTERNS.pageId.test(String(spaceId))) throw new HandoffError('VALIDATION', 'Choose a valid Confluence space.');
   const pages = [];
   const issues = [];
-  for (const p of DEMO_PAGES) {
+  // A related page the first demo page links to. It is not selected as a source, so the Teamwork Graph card can show it as extra context.
+  const CONTEXT_TITLE = 'Billing System Integration Notes (Demo)';
+  if (withPages) {
+    const ctxBody = '<p><em>Synthetic demo content created by HandoffIQ.</em></p><ul><li>The billing API exposes an account status endpoint in its sandbox.</li><li>Sandbox credentials are requested through the platform team.</li></ul>';
+    await atl.createConfluencePage({ spaceId: String(spaceId), title: CONTEXT_TITLE, storageBody: ctxBody });
+  }
+  for (const [idx, p] of DEMO_PAGES.entries()) {
     if (withPages) {
-      const body = `<p><em>Synthetic demo content created by HandoffIQ.</em></p><ul>${p.lines.map((l) => `<li>${escapeHtml(l)}</li>`).join('')}</ul>`;
+      const link = idx === 0 ? `<p>See also: <ac:link><ri:page ri:content-title="${CONTEXT_TITLE}" /><ac:plain-text-link-body><![CDATA[${CONTEXT_TITLE}]]></ac:plain-text-link-body></ac:link></p>` : '';
+      const body = `<p><em>Synthetic demo content created by HandoffIQ.</em></p><ul>${p.lines.map((l) => `<li>${escapeHtml(l)}</li>`).join('')}</ul>${link}`;
       pages.push(await atl.createConfluencePage({ spaceId: String(spaceId), title: p.title, storageBody: body }));
     } else {
       // Jira-only sites: the same synthetic "document" content goes into the description of a Jira issue.

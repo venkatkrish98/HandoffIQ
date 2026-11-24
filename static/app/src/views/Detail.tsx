@@ -355,7 +355,7 @@ function Actions({ id, h, reload }: { id: string; h: Handover; reload: () => voi
     <div className="stack">
       <section className="card">
         <div className="head"><h2>Proposed changes</h2><button className="btn" onClick={propose} disabled={busy}><Icon name="sparkle" size={18} /> {plan.length ? 'Re-propose from latest analysis' : 'Propose Jira tasks & handover page'}</button></div>
-        <p className="muted small"><Icon name="shield" size={14} /> AI proposes · you approve · Forge executes. Nothing is created in Jira or Confluence until you approve it in the dialog.</p>
+        <p className="muted small"><Icon name="shield" size={14} /> HandoffIQ proposes · you approve · Forge executes. Nothing is created in Jira or Confluence until you approve it in the dialog.</p>
       </section>
       {plan.length === 0 ? <EmptyState icon="list" title="No proposals yet" body="Generate a proposal to see exactly which Jira issues and Confluence page HandoffIQ would create." /> : (
         <section className="card">

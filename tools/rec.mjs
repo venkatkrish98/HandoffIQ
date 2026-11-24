@@ -82,6 +82,11 @@ await scene('s4', async () => {
   await fr.getByRole('tab', { name: /Conflicts/ }).click(); await wait(2000);
   await scroll(900, 3, 2400);
 });
+await scene('s4b', async () => {
+  await pg.evaluate(() => window.scrollTo(0, 0));
+  await fr.getByRole('tab', { name: /Overview/ }).click(); await wait(1200);
+  await fr.locator('#twg').scrollIntoViewIfNeeded(); await wait(3500);
+});
 await scene('s5', async () => {
   await pg.evaluate(() => window.scrollTo(0, 0));
   await fr.getByRole('tab', { name: /Overview/ }).click(); await wait(1200);
@@ -115,6 +120,32 @@ await scene('s7', async () => {
   await pg.goto(`${SITE}/jira/software/projects/KAN/list`, { waitUntil: 'domcontentloaded' }); await wait(5500);
   const page = await pg.evaluate(async () => { const r = await (await fetch('/wiki/api/v2/pages?limit=5&title=' + encodeURIComponent('Handover: Harbor Ridge – Customer Onboarding Workflow'), { credentials: 'include' })).json(); return r.results?.[0]; });
   if (page) { await pg.goto(`${SITE}/wiki/spaces/SD/pages/${page.id}`, { waitUntil: 'domcontentloaded' }); await wait(4500); await scroll(500, 2, 1300); }
+});
+await scene('s7b', async () => {
+  fr = await openApp(pg);
+  await fr.getByRole('button', { name: /New handover/ }).first().click(); await wait(600);
+  await type(fr.getByLabel('Project / customer name'), 'Support to Engineering – Priority Escalation', 10);
+  await type(fr.getByLabel('Source team'), 'Customer Support', 10);
+  await type(fr.getByLabel('Receiving team'), 'Platform Engineering', 10);
+  await fr.getByRole('combobox', { name: 'Business priority' }).click(); await wait(250);
+  await fr.getByRole('option', { name: 'High' }).click(); await wait(250);
+  await fr.getByRole('button', { name: /Expected delivery date/ }).click(); await wait(400);
+  await fr.getByRole('button', { name: 'Next month' }).click(); await wait(250);
+  await fr.getByRole('button', { name: 'Next month' }).click(); await wait(250);
+  await fr.locator('[data-date="2027-02-03"]').click(); await wait(300);
+  await fr.getByRole('button', { name: 'Continue' }).click(); await wait(1800);
+  await type(fr.getByLabel(/Specific Jira issues/), JSON.parse(fs.readFileSync('out/dataset2.json', 'utf8')).keys.join(', '), 10);
+  await fr.getByLabel('Space', { exact: true }).click({ force: true }); await wait(700);
+  await fr.getByRole('option', { name: /Software Development/ }).click(); await wait(1500);
+  await fr.getByLabel('Pages', { exact: true }).click({ force: true }); await wait(900);
+  await fr.getByRole('option', { name: 'Support Escalation Plan' }).click(); await wait(350);
+  await fr.getByRole('option', { name: 'Support Sync Notes' }).click(); await wait(350);
+  await pg.keyboard.press('Escape'); await wait(300);
+  await fr.getByRole('button', { name: 'Continue' }).click(); await wait(800);
+  await fr.getByRole('button', { name: /Create and analyze/ }).click();
+  await fr.waitForSelector('text=Why this score', { timeout: 150000 }); await wait(1000);
+  await fr.getByRole('tab', { name: /Conflicts/ }).click(); await wait(1500);
+  await scroll(600, 2, 1500);
 });
 const tEnd = Date.now() / 1000;
 await wait(1200);

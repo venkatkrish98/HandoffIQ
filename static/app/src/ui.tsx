@@ -50,7 +50,7 @@ export function ScorePill({ score, band }: { score: number | null; band: Band | 
 
 const KIND_LABEL: Record<Kind, [string, string]> = {
   verified: ['ok', 'Verified fact'],
-  inferred: ['violet', 'AI inference'],
+  inferred: ['violet', 'Inferred (rule-based)'],
   missing: ['warn', 'Missing information'],
   assumption: ['info', 'User assumption'],
 };

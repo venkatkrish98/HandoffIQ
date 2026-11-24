@@ -15,7 +15,7 @@ HandoffIQ is an Atlassian Forge app that turns scattered Jira and Confluence con
 | Missing-context detection | Unassigned issues, unresolved/TBD items, absent decisions and dates become clarification questions. |
 | Explainable readiness | Seven weighted dimensions, each with a plain-language reason, minus a contradiction penalty. It measures information completeness, not project success. |
 | Clarification workflow | Edit, assign, respond to and resolve questions; re-run after new information without losing human edits. |
-| Human-controlled execution | AI proposes → you review the exact changes and target project/space → you approve → Forge executes as **you**. Every result is audited. |
+| Human-controlled execution | HandoffIQ proposes → you review the exact changes and target project/space → you approve → Forge executes as **you**. Every result is audited. |
 | Freshness | Every source shows when it was retrieved and is flagged fresh / aging / stale. |
 | Teamwork Graph | Read-only lookup (Forge `requestTeamworkGraph`, runs as the user, scope `read:graph:page:confluence`): shows Confluence pages the graph links to your sources but that are not in the handover, as possible missing context. The Teamwork Graph API is in Forge Preview. |
 | Rovo agent | A native Rovo agent with five Rovo actions (list, analyze, gaps, propose, create-approved). It can propose; it cannot approve. |
@@ -70,7 +70,7 @@ forge lint
 
 * **Live testing status.** The full Jira and Confluence flow (retrieval, analysis, approval, real issue and page creation, audit trail, issue panel) was run live on a real Atlassian site. The Rovo agent is implemented per the manifest but has **not** been exercised in Rovo chat because Rovo agents were not available on the test site. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
 * **No generative AI.** Analysis is deterministic and rule-based. The Rovo agent only calls the same actions.
-* **Demo video narration** is AI-generated text-to-speech (Microsoft neural voice); the screen recording is the real app.
+* **Demo video narration** is AI-generated text-to-speech (offline Piper voice, see Credits); the screen recording is the real app.
 
 See [docs/TEST-REPORT.md](docs/TEST-REPORT.md) and [docs/COMPLIANCE.md](docs/COMPLIANCE.md). In short: extraction is pattern-based and can miss unusual phrasing; "no conflicts" means "none detected"; the Rovo skill and Rovo MCP modules (early-access) are **not** implemented. Teamwork Graph use is limited to one read-only lookup (linked Confluence pages); it does not write to the graph.
 

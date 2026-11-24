@@ -1,0 +1,14 @@
+import { attach, frameOf } from './lib.mjs';
+const { b, pg } = await attach();
+const fr = frameOf(pg) || pg.frames().find((f) => f !== pg.mainFrame());
+const wait = (ms) => pg.waitForTimeout(ms);
+await fr.getByRole('option', { name: 'Support Escalation Plan' }).click(); await wait(400);
+await fr.getByRole('option', { name: 'Support Sync Notes' }).click().catch(() => {}); await wait(400);
+await pg.keyboard.press('Escape'); await wait(400);
+await fr.getByRole('button', { name: 'Continue' }).click(); await wait(1000);
+await fr.getByRole('button', { name: /Create and analyze/ }).click();
+await fr.waitForSelector('text=Why this score', { timeout: 150000 }); await wait(1500);
+await fr.getByRole('tab', { name: /Conflicts/ }).click(); await wait(1500);
+console.log((await fr.locator('#main').innerText()).slice(0, 1400));
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

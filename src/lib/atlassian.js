@@ -19,7 +19,11 @@ async function call(fetcher, req, init = {}) {
     await sleep(wait);
     res = await fetcher(req, { ...init, headers: { Accept: 'application/json', ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...init.headers } });
   }
-  if (res.ok) return res.status === 204 ? null : res.json();
+  if (res.ok) {
+    // Some endpoints (e.g. issueLink) answer 201 with an empty body.
+    const text = res.status === 204 ? '' : await res.text();
+    return text ? JSON.parse(text) : null;
+  }
   const body = redact(await res.text().catch(() => ''));
   if (res.status === 401 || res.status === 403) throw new HandoffError('PERMISSION', 'You do not have permission to access this Atlassian resource.', res.status);
   if (res.status === 404) throw new HandoffError('NOT_FOUND', 'The requested Atlassian resource was not found or is not visible to you.', 404);

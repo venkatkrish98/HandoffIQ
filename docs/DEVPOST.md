@@ -27,7 +27,7 @@ Open the install link, install on Jira (and Confluence if you want page creation
 The app includes the `rovo:agent` module (HandoffIQ) and five `action` modules (list, analyze, gaps, propose, create-approved). The agent can propose changes but only executes items a human already approved in the app. Not claimed: Atlassian MCP, Teamwork Graph, Marketplace.
 
 ## AI voice
-The demo-video narration is AI-generated speech; the screen footage is the real app. No third-party music or logos are used.
+The demo-video narration is AI-generated speech (Piper TTS, MIT; en_US libritts_r voice, CC BY 4.0); the screen footage is the real app. No third-party music or logos are used.
 
 ## Accomplishments
 19 passing unit tests that caught real defects in our own engine; responsive UI verified at desktop, tablet and phone widths; approval-gated, permission-aware execution.

@@ -1,0 +1,32 @@
+// Builds out/final.mp4 from screencast frames + title cards + offline narration (wav).
+import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
+const dur = JSON.parse(fs.readFileSync('out/audio/durations.json', 'utf8'));
+const { frames, starts, tEnd } = JSON.parse(fs.readFileSync('out/timeline.json', 'utf8'));
+const ff = (...a) => execFileSync('ffmpeg', ['-y', '-v', 'error', ...a], { stdio: 'inherit' });
+const probe = (f) => parseFloat(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString());
+const W = 1600, H = 900;
+let list = '';
+frames.forEach((f, i) => { const next = frames[i + 1]?.ts ?? tEnd; list += `file 'frames/f${f.n}.jpg'\nduration ${Math.max(0.01, next - f.ts).toFixed(3)}\n`; });
+list += `file 'frames/f${frames.at(-1).n}.jpg'\n`;
+fs.writeFileSync('out/frames.txt', list);
+const vf = `scale=${W}:${H}:force_original_aspect_ratio=decrease,pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2:color=0x060a18,fps=30,format=yuv420p`;
+const enc = ['-c:v', 'libx264', '-preset', 'medium', '-crf', '18'];
+const introD = dur.s1 + 1.2, outroD = dur.s8 + 2.0;
+ff('-loop', '1', '-t', String(introD), '-i', 'out/intro.png', '-vf', vf, ...enc, 'out/intro.mp4');
+ff('-f', 'concat', '-safe', '0', '-i', 'out/frames.txt', '-vf', vf, ...enc, 'out/main.mp4');
+ff('-loop', '1', '-t', String(outroD), '-i', 'out/outro.png', '-vf', vf, ...enc, 'out/outro.mp4');
+const mainD = probe('out/main.mp4');
+fs.writeFileSync('out/v.txt', ['intro', 'main', 'outro'].map((n) => `file '${n}.mp4'`).join('\n'));
+ff('-f', 'concat', '-safe', '0', '-i', 'out/v.txt', '-c', 'copy', 'out/video-only.mp4');
+const t0 = frames[0].ts;
+const cues = [['s1', 0.4]];
+for (const id of Object.keys(starts)) cues.push([id, introD + (starts[id] - t0) + 0.2]);
+cues.push(['s8', introD + mainD + 0.4]);
+const inputs = cues.flatMap(([id]) => ['-i', `out/audio/${id}.wav`]);
+const filt = cues.map(([, t], i) => `[${i}:a]adelay=${Math.round(t * 1000)}|${Math.round(t * 1000)}[a${i}]`).join(';')
+  + ';' + cues.map((_, i) => `[a${i}]`).join('') + `amix=inputs=${cues.length}:normalize=0:dropout_transition=0[aout]`;
+ff(...inputs, '-filter_complex', filt, '-map', '[aout]', '-c:a', 'aac', '-b:a', '160k', 'out/audio-mix.m4a');
+ff('-i', 'out/video-only.mp4', '-i', 'out/audio-mix.m4a', '-c:v', 'copy', '-c:a', 'copy', '-shortest', '-movflags', '+faststart', 'out/final.mp4');
+const total = probe('out/final.mp4');
+console.log('FINAL', total.toFixed(1) + 's', total < 300 ? '(under 5 min)' : '(TOO LONG)', 'core scenes end at', (introD + mainD).toFixed(1) + 's');

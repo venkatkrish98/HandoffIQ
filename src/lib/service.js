@@ -116,6 +116,12 @@ export async function proposePlan(me, id) {
   return { plan: rec.plan };
 }
 
+/** Run `fn` over `list` with at most `n` in flight. */
+async function runPool(list, n, fn) {
+  let i = 0;
+  await Promise.all(Array.from({ length: Math.min(n, list.length) }, async () => { while (i < list.length) await fn(list[i++]); }));
+}
+
 /**
  * Execute ONLY the items the user approved. Each result (success or failure) is
  * written to the audit trail. Failures never abort the remaining approved items.
@@ -133,33 +139,49 @@ export async function executeApproved(me, id, { itemIds, projectKey, spaceId }) 
   rec.lastTarget = { projectKey: projectKey || null, spaceId: spaceId ? String(spaceId) : null };
   const results = [];
   const created = rec.plan.filter((p) => p.status === 'created' && p.type === 'jira-issue').map((p) => ({ key: p.result.key, url: p.result.url, title: p.title }));
-  // Jira first so the Confluence page can reference the created issue keys.
-  for (const it of [...items.filter((p) => p.type === 'jira-issue'), ...items.filter((p) => p.type === 'confluence-page')]) {
-    it.approvedBy = me.displayName;
-    it.approvedAt = new Date().toISOString();
+  const fail = (it, e) => {
+    it.status = 'failed';
+    it.error = redact(e.message);
+    store.audit(rec, me.displayName, it.type === 'jira-issue' ? 'jira.issue.failed' : 'confluence.page.failed', it.title, `${e.code || 'ERROR'}: ${redact(e.message)}`);
+    results.push({ id: it.id, ok: false, code: e.code || 'ERROR', error: redact(e.message) });
+  };
+  const stamp = (it) => { it.approvedBy = me.displayName; it.approvedAt = new Date().toISOString(); };
+  // Jira issues first (three at a time, to stay inside the function time limit without bursting Jira) so the Confluence page can reference the keys.
+  const jiraItems = items.filter((p) => p.type === 'jira-issue');
+  await runPool(jiraItems, 3, async (it) => {
+    stamp(it);
     try {
-      if (it.type === 'jira-issue') {
-        const out = await atl.createJiraIssue({ projectKey, title: it.title, description: it.description, priority: it.priority, assigneeId: null });
-        it.status = 'created';
-        it.result = out;
-        created.push({ key: out.key, url: out.url, title: it.title });
-        store.audit(rec, me.displayName, 'jira.issue.created', `${out.key} in ${projectKey}: ${it.title}`, out.url);
-        const anchor = (rec.jiraIssueKeys || [])[0];
-        if (anchor) await atl.linkIssues(out.key, anchor).catch(() => store.audit(rec, 'HandoffIQ', 'jira.link.skipped', `Could not link ${out.key} to ${anchor}`, 'non-fatal'));
-      } else {
-        const body = buildConfluenceDoc(rec, analysis, rec.sources, created);
-        const out = await atl.createConfluencePage({ spaceId: String(spaceId), title: it.title, storageBody: body });
-        it.status = 'created';
-        it.result = out;
-        store.audit(rec, me.displayName, 'confluence.page.created', `${out.title}`, out.url);
-      }
+      const out = await atl.createJiraIssue({ projectKey, title: it.title, description: it.description, priority: it.priority, assigneeId: null });
+      it.status = 'created';
+      it.result = out;
+      created.push({ key: out.key, url: out.url, title: it.title });
+      store.audit(rec, me.displayName, 'jira.issue.created', `${out.key} in ${projectKey}: ${it.title}`, out.url);
       results.push({ id: it.id, ok: true, result: it.result });
-    } catch (e) {
-      it.status = 'failed';
-      it.error = redact(e.message);
-      store.audit(rec, me.displayName, it.type === 'jira-issue' ? 'jira.issue.failed' : 'confluence.page.failed', it.title, `${e.code || 'ERROR'}: ${redact(e.message)}`);
-      results.push({ id: it.id, ok: false, code: e.code || 'ERROR', error: redact(e.message) });
-    }
+    } catch (e) { fail(it, e); }
+  });
+  // Persist progress now: if anything later is cut short, the created issues are still recorded and never re-created.
+  await store.saveHandover(me.accountId, rec, analysis);
+  // Linking to the first source issue is a courtesy: parallel, one retry, never fails the item.
+  const anchor = (rec.jiraIssueKeys || [])[0];
+  if (anchor) {
+    await Promise.all(jiraItems.filter((it) => it.status === 'created').map(async (it) => {
+      let linkError = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try { await atl.linkIssues(it.result.key, anchor); linkError = null; break; } catch (e) { linkError = e; }
+      }
+      if (linkError) store.audit(rec, 'HandoffIQ', 'jira.link.skipped', `Could not link ${it.result.key} to ${anchor}: ${redact(String(linkError.message || linkError.code || 'unknown')).slice(0, 120)}`, 'non-fatal');
+    }));
+  }
+  for (const it of items.filter((p) => p.type === 'confluence-page')) {
+    stamp(it);
+    try {
+      const body = buildConfluenceDoc(rec, analysis, rec.sources, created);
+      const out = await atl.createConfluencePage({ spaceId: String(spaceId), title: it.title, storageBody: body });
+      it.status = 'created';
+      it.result = out;
+      store.audit(rec, me.displayName, 'confluence.page.created', `${out.title}`, out.url);
+      results.push({ id: it.id, ok: true, result: it.result });
+    } catch (e) { fail(it, e); }
   }
   await store.saveHandover(me.accountId, rec, analysis);
   return { results, plan: rec.plan };

@@ -73,6 +73,10 @@ forge lint
 
 See [docs/TEST-REPORT.md](docs/TEST-REPORT.md) and [docs/COMPLIANCE.md](docs/COMPLIANCE.md). In short: extraction is pattern-based and can miss unusual phrasing; "no conflicts" means "none detected"; the Rovo skill and Rovo MCP modules (early-access) and Teamwork Graph are **not** implemented.
 
+## Credits
+
+Demo-video narration: offline AI voice generated with [Piper](https://github.com/rhasspy/piper) (MIT) using the `en_US-libritts_r-medium` voice (LibriTTS-R dataset, CC BY 4.0). Recording and narration scripts are in [tools/](tools/).
+
 ## Security
 
 Least-privilege scopes, `asUser()` for all reads and writes, server-side validation, HTML escaping in generated pages, error redaction, no secrets in the repo or bundle. See [docs/SECURITY.md](docs/SECURITY.md).

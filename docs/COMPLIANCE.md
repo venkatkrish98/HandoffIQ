@@ -46,7 +46,7 @@ Source: the full Official Rules text, pasted by the owner on 2026-11-04 (earlier
 
 | Bonus | Requirement (per page) | Our position |
 |---|---|---|
-| Best Agents | Forge app including `rovo:agent`, `rovo:agentConnector`, or reusable `rovo:skill` + `rovo:action` | ✅ **Qualifies on paper:** `rovo:agent` + 5 `action` modules. **Agent not yet tested live in Rovo chat.** |
+| Best Agents | Forge app including `rovo:agent`, `rovo:agentConnector`, or reusable `rovo:skill` + `rovo:action` | ✅ **Qualifies on paper:** `rovo:agent` + 5 `action` modules. Agent verified listed in Rovo and invoking its actions (2026-11-25); not yet with real handover data. |
 | Best app with Atlassian MCP | Forge app exposing an MCP server | ❌ Not implemented (`rovo:mcp` is EAP). Do not claim. |
 | Teamwork Graph integration | Writes to or reads from the Teamwork Graph API | ✅ **Reads** via `requestTeamworkGraph` (curated query `confluencePageLinkedConfluencePages`), verified live 2026-11-24. No writes. |
 | Marketplace published | Listing link or Marketplace review ticket | ❌ Not done. Do not claim. |

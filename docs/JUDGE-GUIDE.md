@@ -20,7 +20,7 @@ Use the install link in [INSTALL-LINK.txt](INSTALL-LINK.txt) (also in the Devpos
 Open a handover that has Confluence pages: the Overview shows **Related context from the Teamwork Graph**, pages the graph links to your sources that are not in the handover. With the sample content it surfaces "Billing System Integration Notes (Demo)". The install asks for the extra read scope `read:graph:page:confluence`. If the graph has not indexed new pages yet, the card says so; wait a few minutes.
 
 ## Rovo agent
-*Not live-tested by the author yet (Rovo was unavailable on the test site); implemented per `manifest.yml`.*
+*Verified by the author only up to the point that the agent is listed in Rovo and invokes the HandoffIQ actions; create a handover in the app first so the agent has data to report on.*
 Open Rovo chat → agent **HandoffIQ** → "Which of my handovers are not ready, and why?" The agent calls the actions listed in `manifest.yml`; it can propose changes but not approve them.
 
 ## Permission behaviour to try

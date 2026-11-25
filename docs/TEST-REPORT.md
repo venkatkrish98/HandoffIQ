@@ -39,7 +39,7 @@ Date parsing; freshness classification; extraction of requirements/decisions/dep
 | Retrieve 4 Jira issues + 2 Confluence pages, analyze | **passed**: 6 sources, 5 requirements, 4 decisions, 3 conflicts (owner, date, date vs form), 7 questions, readiness 41 |
 | Approve and execute plan: real Jira issues (KAN-5 to KAN-12) and a real Confluence page "Handover: Harbor Ridge ..." | **passed**, page opened and rendered in Confluence |
 | Jira issue panel "HandoffIQ handover status" | **passed** (renders; listing for an issue not in any handover verified) |
-| Rovo agent in Rovo chat | ❌ **not tested**: Rovo/agents were not available on the test site (admin Agents page showed no sites) |
+| Rovo agent in Rovo chat (checked 2026-11-25 on the first demo site, development install; Rovo is not yet surfaced on handoffiq-test) | **partially passed**: the HandoffIQ agent is listed under Rovo Agents with its description and our three conversation starters; asking "What conflicts and open questions block this handover?" made Rovo call a HandoffIQ action and relay an honest answer ("no handovers found" because that site had none). **Not yet verified with real handover data.** |
 
 Bugs found only by the live runs and fixed: (1) `@forge/resolver` default import resolved to a namespace object ("not a constructor"); (2) Forge KVS rejects `null` values; (3) two validation regexes had lost a backslash (`/^d{1,20}$/` instead of digits), which rejected every Confluence space id; now uses the shared, unit-tested `PATTERNS`.
 
@@ -47,7 +47,7 @@ Earlier site (one-atlas-xzpf) returned 401 for every user-token call, so it was 
 
 ## NOT yet executed (do not treat as passed)
 
-* **Rovo agent** conversation in Rovo chat.
+* **Rovo agent** answering with real handover data (the agent and its action invocation were verified; see above).
 * Permission-failure paths against a restricted user.
 * Screen-reader testing; only keyboard/focus structure and ARIA roles were implemented.
 

@@ -1,0 +1,10 @@
+import { attach } from './lib.mjs';
+const { b, ctx, pg } = await attach();
+await pg.setViewportSize({ width: 1600, height: 900 });
+await pg.goto('https://home.atlassian.com/o/470b2c26-6258-49c0-87d3-9cbc2be1ed10/agents?cloudId=62d69c2e-9847-425e-a449-50fe415c900f', { waitUntil: 'domcontentloaded' });
+await pg.waitForTimeout(8000);
+await pg.mouse.click(485, 425);
+await pg.waitForTimeout(9000);
+console.log('URL', pg.url().slice(0, 150));
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

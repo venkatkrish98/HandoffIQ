@@ -1,0 +1,10 @@
+import { attach } from './lib.mjs';
+const { b, pg } = await attach();
+await pg.setViewportSize({ width: 1600, height: 900 });
+await pg.goto('https://one-atlas-xzpf.atlassian.net/jira/for-you', { waitUntil: 'domcontentloaded' });
+await pg.waitForTimeout(9000);
+const hrefs = await pg.locator('a').evaluateAll((els) => els.filter((e) => /HandoffIQ/.test(e.innerText) || /e68f72e1/.test(e.href)).map((e) => e.innerText.trim().slice(0, 30) + ' -> ' + e.href));
+console.log(hrefs.join('\n') || 'none');
+console.log(pg.url());
+await pg.screenshot({ path: 'out-app.png' });
+await b.close();

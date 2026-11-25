@@ -68,7 +68,7 @@ forge lint
 
 ## Honest limitations
 
-* **Live testing status.** The full Jira and Confluence flow (retrieval, analysis, approval, real issue and page creation, audit trail, issue panel) was run live on a real Atlassian site. The Rovo agent is implemented per the manifest but has **not** been exercised in Rovo chat because Rovo agents were not available on the test site. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
+* **Live testing status.** The full Jira and Confluence flow (retrieval, analysis, approval, real issue and page creation, audit trail, issue panel) was run live on a real Atlassian site. The Rovo agent is registered and answers in Rovo chat (verified on a development install: it is listed, shows its conversation starters and invokes the HandoffIQ actions), but it has **not** yet been verified answering with real handover data. See [docs/TEST-REPORT.md](docs/TEST-REPORT.md).
 * **No generative AI.** Analysis is deterministic and rule-based. The Rovo agent only calls the same actions.
 * **Demo video narration** is AI-generated text-to-speech (offline Piper voice, see Credits); the screen recording is the real app.
 
